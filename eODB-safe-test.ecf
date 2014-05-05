@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="eodb-test-app" uuid="55228DD0-B1DD-4669-87E4-B3C567CA6364">
+	<target name="eodb-test-app">
+		<root cluster="testcases" class="EODB_TEST_APP" feature="make_for_test"/>
+		<option trace="false" warning="true" full_class_checking="false" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="eiffel2java" location="$ISE_LIBRARY\library\eiffel2java\eiffel2java-safe.ecf"/>
+		<library name="eodb" location=".\eODB-safe.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<cluster name="testcases" location=".\testcases\">
+			<option trace="false" void_safety="transitional">
+			</option>
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

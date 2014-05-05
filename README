@@ -1,0 +1,65 @@
+﻿# Eiffel Orient DB interface
+
+
+## Overview
+
+The Eiffel Orient DB interface (eODB) provides Eiffel users with an inrerface towards the Orient DB graph database.
+
+This layer is multi-platform: it can be set on Windows, Linux operating systems ( TBD)
+
+Main ferures
+* ...
+
+
+## Project
+
+Official project site:
+
+* http://
+
+For more information please have a look at the related wiki:
+
+* https://github.com/eODB/wiki
+
+For download, check
+* https://github.com/eODB/downloads
+
+## Requirements
+* Compiling from EiffelStudio 13.11 and more recent version of the compiler.
+* Developped using EiffelStudio 13.11 (on Windows)
+* Tested using EiffelStudio 13.11 with "jenkins" CI server 
+* The code have to allow __void-safe__ compilation and non void-safe system (see [more about void-safety](http://docs.eiffel.com/book/method/void-safe-programming-eiffel) )
+
+## How to get the source code?
+
+Using git 
+* git clone https://github.com/....git
+
+* And to build the required and related java source
+
+## Test framework for eODB
+..
+
+## Examples
+..
+
+## Contributing to this project
+
+Anyone and everyone is welcome to contribute. Please take a moment to
+review the [guidelines for contributing](CONTRIBUTING.md).
+
+* [Bug reports](CONTRIBUTING.md#bugs)
+* [Feature requests](CONTRIBUTING.md#features)
+* [Pull requests](CONTRIBUTING.md#pull-requests)
+
+## Community
+
+Keep track of development and community news.
+
+* Follow [@EiffelWeb](https://twitter.com/EiffelWeb) on Twitter
+* Follow our [page](https://plus.google.com/u/0/110650349519032194479) and [community](https://plus.google.com/communities/110457383244374256721) on Google+
+* Have a question that's not a feature request or bug report? [Ask on the mailing list](http://groups.google.com/group/eiffel-web-framework)
+
+
+For more information please have a look at the related wiki:
+* https://github.com/eODB/wiki
