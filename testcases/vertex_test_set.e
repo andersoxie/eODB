@@ -68,10 +68,12 @@ feature -- Test routines
 			-- Only create it. Do not save it. Now I save automatically when creating so I had to change this test case
 		local
 			vert : VERTEX
+			vert2 : VERTEX
 		do
 			if attached test_db as db  then
 				create vert.make (db)
-				assert ("Vertex removed", db.get_number_of_vertexes = 1)
+				db.commit  -- In previous implementation, e.g. 1.4, I did not need to do a commit to get the database updated with the vertex
+				assert ("Vertex should exists", db.get_number_of_vertexes = 1)
 			else
 				assert("Could not contact test db", false)
 			end
@@ -86,8 +88,10 @@ feature -- Test routines
 			if attached test_db as db  then
 				create vert.make (db)
 				vert.save
+				db.commit
 				assert ("Vertex stored", db.get_number_of_vertexes = 1)
 				vert.delete
+				db.commit
 				assert ("Vertex removed", db.get_number_of_vertexes = 0)
 			else
 				assert("Could not contact test db", false)
@@ -104,9 +108,11 @@ feature -- Test routines
 				create vert.make (db)
 				vert.field_integer ("First", 123)
 				vert.save
+				db.commit
 				assert ("Vertex stored", db.get_number_of_vertexes = 1)
 				assert ("Value set", vert.get_field_integer ("First") = 123 )
 				vert.delete
+				db.commit
 				assert ("Vertex removed", db.get_number_of_vertexes = 0)
 			else
 				assert("Could not contact test db", false)
@@ -128,6 +134,7 @@ feature -- Test routines
 				assert ("Vertex stored", db.get_number_of_vertexes = 1)
 				assert ("Value set", vert.get_field_string ("StringFirst").is_equal ("First string") )
 				vert.delete
+				db.commit
 				assert ("Vertex removed", db.get_number_of_vertexes = 0)
 			else
 				assert("Could not contact test db", false)
@@ -146,13 +153,16 @@ feature -- Test routines
 				create vert.make (db)
 				vert.field_integer ("First", 1)
 				vert.save
+				db.commit
 				assert ("Value stored", db.get_number_of_vertexes = 1)
 				assert ("Second value set", vert.get_field_integer ("First") = 1 )
 				vert.field_integer ("First", 8)
 				vert.save
+				db.commit
 				assert ("Value stored", db.get_number_of_vertexes = 1)
 				assert ("Second value set", vert.get_field_integer ("First") = 8 )
 				vert.delete
+				db.commit
 				assert ("Vertex removed", db.get_number_of_vertexes = 0)
 			else
 				assert("Could not contact test db", false)
@@ -216,6 +226,7 @@ feature -- Test routines
 	change_value_in_vertex_without_saving
 			-- This to try to understand when I communicate with the database and when it is saved etc. Seems to be an automatic rollback in this case.
 			-- 2013-05-16 Since I now automaticallysave when creating this case needed some changes. Might not be interesgted to keep.
+			-- 20140511 Since when migrating from 1.4 to 1.7 ov orient db I had to add committo get correct values from count etc this might be a test case that should be removed.
 		local
 			vert : VERTEX
 		do
@@ -223,9 +234,11 @@ feature -- Test routines
 
 				create vert.make (db)
 				vert.field_integer ("First", 1)
+				db.commit
 				assert ("Value not stored but still exists", db.get_number_of_vertexes = 1)
 				assert ("First value set", vert.get_field_integer ("First") = 1 )
 				vert.field_integer ("First", 8)
+				db.commit
 				assert ("Second value set", vert.get_field_integer ("First") = 8 )
 				assert ("Vertex auto saved", db.get_number_of_vertexes = 1)
 			else
@@ -286,9 +299,11 @@ feature -- Test routines
 
 				create vert.make (db)
 				vert.save
+				db.commit
 				assert ("First has cluster position", vert.get_cluster_position >= 0)
 				create vert2.make (db)
 				vert2.save
+				db.commit
 				assert ("Second has cluster position", vert2.get_cluster_position > 0)
 			else
 				assert("Could not contact test db", false)

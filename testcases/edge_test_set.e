@@ -93,15 +93,17 @@ feature -- Test routines
 	local
 		ed :EDGE
 		v1, v2 : VERTEX
-			-- Only create it. Do not save it.
 		do
 			if attached test_db as db then
 
 				create v1.make (db)
 				create v2.make (db)
 				create ed.make (db, v1, v2)
-				ed.field_string ("label", "rough_estimate")
-				assert ("Correct label at edge", ed.get_field_string ("label").is_equal ("rough_estimate"))
+				-- Checnged from previous version from "label" to "label1". Seems that "label" is a reserved word for properties.
+				ed.field_string ("label1", "rough_estimate")
+				ed.save
+				db.commit
+				assert ("Correct label at edge", ed.get_field_string ("label1").is_equal ("rough_estimate"))
 			else
 				assert("Could not contact test db", false)
 			end

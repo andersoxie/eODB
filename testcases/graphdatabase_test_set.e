@@ -80,6 +80,7 @@ feature
 				db.commit
 				assert ("Is not empty", db.get_number_of_vertexes = 1)
 				vert.delete
+				db.commit
 			else
 				assert("Could not contact test db", false)
 			end
@@ -103,6 +104,7 @@ feature
 				list_of_vertexes := db.get_vertexes ("wrong label")
 				assert ("Is not empty", list_of_vertexes.count = 0)
 				vert.delete
+				db.commit
 			else
 				assert("Could not contact test db", false)
 			end
@@ -167,6 +169,7 @@ feature
 
 				if attached db.get_vertex ("Testdata", "valuedata") as vert2 then
 					vert2.delete
+					db.commit
 				else
 					assert("Could not find vertex", false)
 				end
@@ -189,7 +192,7 @@ feature
 				db.commit
 				assert ("Is not empty", db.get_number_of_vertexes = 1)
 				db.set_root_vertex (vert)
-
+				db.commit
 				if not attached  db.get_root_vertex as root_v then
 					assert("Found root vertex", false)
 				else
@@ -199,6 +202,7 @@ feature
 
 				if attached db.get_vertex ("Testdata", "valuedata") as vert2 then
 					vert2.delete
+					db.commit
 				else
 					assert("Found vertex", false)
 				end
@@ -220,7 +224,7 @@ feature
 			create vert2.make (db)
 			vert2.field_string ("Testdata", "valuedata")
 			create e.make (db, vert1, vert2)
-			e.field_string ("label", "test")
+			e.field_string ("label1", "test")
 			e.save
 			db.commit
 
@@ -231,6 +235,7 @@ feature
 			e.delete
 			vert1.delete
 			vert2.delete
+			db.commit
 		else
 			assert("Could not contact test db", false)
 		end
@@ -260,6 +265,7 @@ feature
 			e.delete
 			vert1.delete
 			vert2.delete
+			db.commit
 		else
 			assert("Could not contact test db", false)
 		end
@@ -281,17 +287,18 @@ feature
 			create vert2.make (db)
 			vert2.field_string ("Testdata", "valuedata")
 			create e.make (db, vert1, vert2)
-			e.field_string ("label", "test")
+			e.field_string ("label1", "test")
 			e.save
 			db.commit
 
 			if not attached db.get_in_edge (vert2, "test") as e_result then
-				assert ("Was able to get edge", false)
+				assert ("Was not able to get edge", false)
 			end
 
 			e.delete
 			vert1.delete
 			vert2.delete
+			db.commit
 		else
 			assert("Could not contact test db", false)
 		end
@@ -324,6 +331,7 @@ feature
 			e.delete
 			vert1.delete
 			vert2.delete
+			db.commit
 		else
 			assert("Could not contact test db", false)
 		end
@@ -344,14 +352,16 @@ feature
 			create vert3.make (db)
 			vert3.field_string ("Testdata", "valuedata")
 			create e1.make (db, vert1, vert2)
-			e1.field_string ("label", "test")
+			e1.field_string ("label1", "test")
 			create e2.make (db, vert1, vert3)
-			e2.field_string ("label", "test")
+			e2.field_string ("label1", "test")
+			db.commit
 
 			assert ("Correct number of relations",  db.get_number_of_relations (vert1, "test") = 2)
 			vert1.delete
 			vert2.delete
 			vert3.delete
+			db.commit
 		else
 			assert("Could not contact test db", false)
 		end
@@ -373,20 +383,21 @@ feature
 			create vert3.make (db)
 			vert3.field_string ("Testdata", "valuedata")
 			create e1.make (db, vert1, vert2)
-			e1.field_string ("label", "test")
+			e1.field_string ("label1", "test")
 			create e2.make (db, vert1, vert3)
-			e2.field_string ("label", "test")
-
+			e2.field_string ("label1", "test")
+			db.commit
 			array_of_edges :=  db.get_relations (vert1, "test")
 
 			assert ("Correct number of relations",  array_of_edges.count = 2)
 			array_of_edges.start()
-			assert ("Correct first label",  array_of_edges.item.get_field_string ("label").is_equal ("test")   )
+			assert ("Correct first label",  array_of_edges.item.get_field_string ("label1").is_equal ("test")   )
 			array_of_edges.move (1)
-			assert ("Correct second label",  array_of_edges.item.get_field_string ("label").is_equal ("test")   )
+			assert ("Correct second label",  array_of_edges.item.get_field_string ("label1").is_equal ("test")   )
 			vert1.delete
 			vert2.delete
 			vert3.delete
+			db.commit
 		else
 			assert("Could not contact test db", false)
 		end

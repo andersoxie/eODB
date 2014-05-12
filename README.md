@@ -3,11 +3,11 @@
 
 ## Overview
 
-The Eiffel Orient DB interface (eODB) provides Eiffel users with an inrerface towards the Orient DB graph database.
+The Eiffel Orient DB interface (eODB) provides Eiffel users with an interface towards the Orient DB graph database http://www.orientechnologies.com/orientdb/
 
-This layer is multi-platform: it can be set on Windows, Linux operating systems ( TBD)
+This layer is multi-platform: it can be used on Windows, Linux operating systems ( TBD)
 
-Main ferures
+Main features
 
 * Create a graph databse in Orient DB, class GRAPHDATABASE
 * Create and manage Vertexes in Orient DB, class VERTEX
@@ -32,6 +32,7 @@ For more information please have a look at the related wiki:
 
 * It was developed with Orient DB version 1.3.0. That version of Orient DB includes an error when deleting vertexes/edges that was reported and
   verified corrected in a beta version of 1.4.0.
+  This version is now migrated to support version 1.7 RC2 which is a major change due to change of API.
 
 ## How to get the source code?
 

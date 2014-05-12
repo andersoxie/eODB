@@ -99,7 +99,6 @@ feature
 
 			java_edge.void_method (fid, j_args)
 
-			save()
 
 			if jni.exception_occurred then
 				print ("Java exception occured in EDGE field_string!%N" )
@@ -107,6 +106,8 @@ feature
 				jni.exception_clear
 	-- TODOLATER Through a developer exception
 			end
+			save()
+
 		end
 
 	end

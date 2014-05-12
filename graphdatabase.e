@@ -19,21 +19,23 @@ feature -- Creation
 		do
 				--| Creation of the Java object
 			java_graphdatabase_class := jni.find_class ("graphdatabase")
-			change_database (database_name)
+			my_database := database_name
 		end
 
 
-	change_database(database_name : STRING)
+	change_database(database_name : STRING; user : STRING; pass : STRING)
 		local
 
 			j_args: JAVA_ARGS
 		do
 			if attached  java_graphdatabase_class as db_class then
 
-				create j_args.make(1)
+				create j_args.make(3)
 				j_args.put_string (database_name , 1)
+				j_args.put_string (user , 2)
+				j_args.put_string (pass , 3)
 
-				create java_graphdatabase_object.create_instance (db_class, "(Ljava/lang/String;)V", j_args)
+				create java_graphdatabase_object.create_instance (db_class, "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", j_args)
 			end
 			if jni.exception_occurred then
 				print ("Java exception occured in change_database!%N" )
@@ -43,21 +45,22 @@ feature -- Creation
 
 	end
 
+	my_database : STRING
+
 	open (user :STRING; pass : STRING)
 	local
 		j_args : JAVA_ARGS
 		fid: POINTER
 	do
+		change_database (my_database,user, pass)
 		if attached java_graphdatabase_object as db_object then
 
-			create j_args.make(2)
-			j_args.put_string (user , 1)
-			j_args.put_string (pass , 2)
+--			create j_args.make(2)
 
-			fid := db_object.method_id ("open", "(Ljava/lang/String;Ljava/lang/String;)V")
+--			fid := db_object.method_id ("open", "(Ljava/lang/String;Ljava/lang/String;)V")
 
 
-			db_object.void_method (fid, j_args)
+--			db_object.void_method (fid, j_args)
 			if jni.exception_occurred then
 				print ("Java exception occured!%N" )
 
@@ -359,10 +362,11 @@ set_root_vertex (v : VERTEX)
 						index > array_of_edges.count
 					loop
 						if attached  array_of_edges.item (index-1) as e then
+							-- FIXME. This was not attached so when index was incremetned within the if statemet it looped. But we need to investigate why it did not attach correct
 --							Result[index] := create {EDGE}.make_from_java_object(Current, e)
 							Result.extend ( create {EDGE}.make_from_java_object(Current, e))
-							index := index + 1
 						end
+						index := index + 1
 					end
 				end
 			end
