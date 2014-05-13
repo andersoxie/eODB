@@ -18,8 +18,6 @@ class graphdatabase
 
 try{
 	testprint("Start of graphdatabase constructor!");
-//	database = new OGraphDatabase( database_name);
-
 	database = new OrientGraph( database_name, user, pass);
 	testprint("End of graphdatabase constructor!");
 
@@ -31,13 +29,12 @@ try{
 public OrientGraph database;
 
 
-//OGraphDatabase database = OGraphDatabasePool.global().acquire("remote:localhost/temp", "writer", "writer");
-
 void open (String user, String pass){
 	testprint("graphdatabase open!");
 
 try{
 	testprint("graphdatabase open! user =" + user + ".Password =" + pass );
+//Depreeated method since password is given when createing this object (part of changes from 1.3 to 1.7 of orient DB
 //	database.open (user, pass);
 } catch (Exception e){
 	testprint("Exception in graphdatabase open! user =" + user + ".Password =" + pass + ".Error: " + e.getMessage());
@@ -135,11 +132,24 @@ edge get_in_edge( vertex v, String label){
 
 void set_root_vertex( vertex v){
 //	database.setRoot ("graph", v.vert);  TODO
+
+// Define my own root since I can not find the implementation of it in 1.7 API
+v.vert.setProperty("my_root", "my_root");
 }
 
 vertex get_root_vertex(){
 //	return new vertex (database.getRoot ("graph"));TODO
-	return new vertex (null);
+	testprint("Start get_root_vertex");
+
+Object[] v = get_vertexes("my_root");
+	testprint("Found a root. get_root_vertex");
+
+	return (vertex) v[0];
+//	return new vertex ( (OrientVertex) v[0]);
+
+// Taken from support cases 2011. Can not find getRoot any longer.
+// ODocument root = graph.getRawGraph().getRoot("root");
+// Vertex vertex = new OrientVertex(graph, root);
 
 }
 
@@ -240,11 +250,11 @@ return null;
 Object[] get_vertexes (String index){
 	OrientVertex res_vert = null;
 
-int number_of_vertexes;
+	int number_of_vertexes;
 
-Object[] array_of_vertexes;
+	Object[] array_of_vertexes;
 
-try {
+  try {
 	testprint("graphdatabase get_vertexes! index: " + index );
 	number_of_vertexes = 0;
 
@@ -283,13 +293,13 @@ try {
 	testprint("Returning an array with " + ind +" vertexes");
 	}
 	return array_of_vertexes;
-} catch (Exception e){
+   } catch (Exception e){
 	testprint("graphdatabase get_vertexes! " + "Error: " + e.getMessage());
-}
-if (res_vert != null) {
+   }
+   if (res_vert != null) {
 	return new Object[0];
-}
-return new Object[0];
+   }
+   return new Object[0];
 }
 
 
