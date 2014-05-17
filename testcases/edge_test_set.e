@@ -7,6 +7,11 @@ note
 	revision: "$Revision$"
 	testing: "type/manual"
 
+
+	-- TODO Test Cases to add
+	-- When setting a label check that it is set. It is now set at the creation of the EDGE. Might write a postcondition for that.
+	--
+
 class
 	EDGE_TEST_SET
 
@@ -63,7 +68,7 @@ feature -- Test routines
 			if attached test_db as db then
 				create v1.make (db)
 				create v2.make (db)
-				create ed.make (db, v1, v2)
+				create ed.make (db, v1, v2, "test_label")
 -- TODO			assert ("", )
 			else
 				assert("Could not contact test db", false)
@@ -81,8 +86,8 @@ feature -- Test routines
 
 				create v1.make (db)
 				create v2.make (db)
-				create ed.make (db, v1, v2)
-				ed.field_string ("label", "rough_estimate")
+				create ed.make (db, v1, v2, "test_label")
+				ed.field_string ("label1", "rough_estimate")
 			else
 				assert("Could not contact test db", false)
 			end
@@ -98,12 +103,11 @@ feature -- Test routines
 
 				create v1.make (db)
 				create v2.make (db)
-				create ed.make (db, v1, v2)
-				-- Checnged from previous version from "label" to "label1". Seems that "label" is a reserved word for properties.
-				ed.field_string ("label1", "rough_estimate")
+				create ed.make (db, v1, v2, "test_label")
+				ed.field_string ("test_label", "rough_estimate")
 				ed.save
 				db.commit
-				assert ("Correct label at edge", ed.get_field_string ("label1").is_equal ("rough_estimate"))
+				assert ("Correct label at edge", ed.get_field_string ("test_label").is_equal ("rough_estimate"))
 			else
 				assert("Could not contact test db", false)
 			end
@@ -121,7 +125,7 @@ feature -- Test routines
 				db.begin_optimistic_transition
 				create v1.make (db)
 				create v2.make (db)
-				create ed.make (db, v1, v2)
+				create ed.make (db, v1, v2, "test_label")
 				db.commit
 				db.begin_optimistic_transition
 				ed.delete

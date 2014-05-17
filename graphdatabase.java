@@ -34,7 +34,7 @@ void open (String user, String pass){
 
 try{
 	testprint("graphdatabase open! user =" + user + ".Password =" + pass );
-//Depreeated method since password is given when createing this object (part of changes from 1.3 to 1.7 of orient DB
+//Depreceated method since password is given when createing this object (part of changes from 1.3 to 1.7 of orient DB
 //	database.open (user, pass);
 } catch (Exception e){
 	testprint("Exception in graphdatabase open! user =" + user + ".Password =" + pass + ".Error: " + e.getMessage());
@@ -63,7 +63,7 @@ try {
 //TODO Seems that it will always start an optimistic transitin by default.
 void begin_optimistic_transition (){
 try {
-	testprint("graphdatabase begin optimistic transition!");
+	testprint("graphdatabase begin optimistic transition removed in this version!");
 	//database.begin(OTransaction.TXTYPE.OPTIMISTIC);
 } catch (Exception e){
 	testprint("graphdatabase begin optimisitc transition! " + "Error: " + e.getMessage());
@@ -103,15 +103,20 @@ return null;
 edge get_out_edge( vertex v, String label){
 	testprint("graphdatabase get_out_edge, label : " + label);
 
-//What should the label be. Now I use same as when creating in edge.java
-	Iterable <Edge> edges = v.vert.getEdges(Direction.OUT , "bsharp_edge");
+	Iterable <Edge> edges = v.vert.getEdges(Direction.OUT , label);
 	OrientEdge e;
 	edge edge_to_return = null;
 	Iterator i = edges.iterator(); 
+	int number_of_edges_found = 0;
+	String edge_value = null;
 	while ( i.hasNext()) {
+		testprint("Iterating Edges! ");
 		e = (OrientEdge) i.next();
+		testprint("Found Edges! ");
 		edge_to_return = new edge(e);
+		number_of_edges_found ++;
 	}
+	testprint("graphdatabase get_out_edge, number of edges found : " + number_of_edges_found);
 	return edge_to_return;
 
 }
@@ -119,53 +124,47 @@ edge get_out_edge( vertex v, String label){
 edge get_in_edge( vertex v, String label){
 	testprint("graphdatabase get_in_edge, label : " + label);
 
-	Iterable <Edge> s = v.vert.getEdges(Direction.IN, "bsharp_edge");
+	Iterable <Edge> s = v.vert.getEdges(Direction.IN, label);
 	OrientEdge e;
 	edge edge_to_return = null;
 	Iterator i = s.iterator(); 
+	int number_of_edges_found = 0;
+
+	String edge_value = null;
+
 	while ( i.hasNext()) {
 		e = (OrientEdge) i.next();
 		edge_to_return = new edge(e);
+		number_of_edges_found ++;
 	}
+	testprint("graphdatabase get_in_edge, number of edges found : " + number_of_edges_found);
 	return edge_to_return;
 }
 
 void set_root_vertex( vertex v){
-//	database.setRoot ("graph", v.vert);  TODO
-
-// Define my own root since I can not find the implementation of it in 1.7 API
-v.vert.setProperty("my_root", "my_root");
+	// Define my own root since I can not find the implementation of it in 1.7 API
+	v.vert.setProperty("my_root", "my_root");
 }
 
 vertex get_root_vertex(){
-//	return new vertex (database.getRoot ("graph"));TODO
 	testprint("Start get_root_vertex");
 
-Object[] v = get_vertexes("my_root");
+	Object[] v = get_vertexes("my_root");
 	testprint("Found a root. get_root_vertex");
-
 	return (vertex) v[0];
-//	return new vertex ( (OrientVertex) v[0]);
-
-// Taken from support cases 2011. Can not find getRoot any longer.
-// ODocument root = graph.getRawGraph().getRoot("root");
-// Vertex vertex = new OrientVertex(graph, root);
-
 }
 
 
 
 vertex get_out_vertex( edge e){
 	testprint("Get_out_vertex");
-// Changed from getoutvertex
-	return new vertex (database.getVertex(e.ed));
+	return new vertex (e.ed.getVertex(Direction.OUT));
 }
 
 
 vertex get_in_vertex( edge e){
 	testprint("Get_in_vertex");
-// chenged from getinvertex
-	return new vertex (database.getVertex(e.ed));
+	return new vertex (e.ed.getVertex(Direction.IN));
 }
 
 
@@ -196,8 +195,15 @@ try {
 		ed = (OrientEdge) j.next();
 		index++;
 	}
+	Iterable <Edge> s_in = v.vert.getEdges(Direction.IN);
+
+	Iterator i = s_in.iterator();
+
+	while ( i.hasNext()) {
+		ed = (OrientEdge) i.next();
+		index++;
+	}
 	
-//	edge_array = s.toArray();
 	testprint("graphdatabase get_number_of_relations, number : " + index);
 	return index;
 
@@ -207,6 +213,8 @@ try {
 return 0;
 }
 
+// TODO Should probably have one with IN relations and one with out relations. This one is probably used as out from start, before changing to 1.7
+
 Object[] get_relations(vertex v,  String label){
 
 Object[] array_of_edges;
@@ -214,20 +222,25 @@ OrientEdge e;
 
 try {
 	testprint("graphdatabase get_relations! label: " +  label);
-//	Iterable <Edge> s = v.vert.getEdges(Direction.OUT, "bsharp_edge");
 	Iterable <Edge> s = v.vert.getEdges(Direction.OUT);
 	
-//	array_of_edges = new Object[s.size()];
-
 	Iterator j = s.iterator();
 	int index = 0;
 	while ( j.hasNext()) {
 		e = (OrientEdge) j.next();
 		index++;
 	}
+
+	Iterable <Edge> s_in = v.vert.getEdges(Direction.IN);
+	
+	Iterator k = s_in.iterator();
+	while ( k.hasNext()) {
+		e = (OrientEdge) k.next();
+		index++;
+	}
+
 	array_of_edges = new Object[index];
 
-	
 	index = 0;
 	Iterator i = s.iterator(); 
 	while ( i.hasNext()) {
@@ -235,6 +248,14 @@ try {
 		 array_of_edges[index] = new edge(e);
 		index++;
 	}
+
+	Iterator l = s_in.iterator(); 
+	while ( l.hasNext()) {
+		e = (OrientEdge) l.next();
+		 array_of_edges[index] = new edge(e);
+		index++;
+	}
+
 	testprint("graphdatabase got " + index + " relations for label : " + label);
 
 

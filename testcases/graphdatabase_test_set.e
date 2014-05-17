@@ -7,6 +7,13 @@ note
 	revision: "$Revision$"
 	testing: "type/manual"
 
+
+	-- TODO Test cases to add
+	-- No test done to check if I could get the correct out-edge and in-edge via lable
+	-- No test for checking if one could get the correct vertec from an edge, out/in direction
+	-- Get relations is not tested thoroghly
+	-- Get edge from vertex with certain label is not tested.
+
 class
 	GRAPHDATABASE_TEST_SET
 
@@ -223,12 +230,11 @@ feature
 			vert1.field_string ("Testdata", "valuedata")
 			create vert2.make (db)
 			vert2.field_string ("Testdata", "valuedata")
-			create e.make (db, vert1, vert2)
-			e.field_string ("label1", "test")
+			create e.make (db, vert1, vert2, "test_label")
 			e.save
 			db.commit
 
-			if not attached  db.get_out_edge (vert1, "test") as e_result then
+			if not attached  db.get_out_edge (vert1, "test_label") as e_result then
 				assert ("Was able to get edge", false)
 			end
 
@@ -241,7 +247,7 @@ feature
 		end
 	end
 
-	try_to_get_out_edge_for_ --label_that_des_not_exist
+	try_to_get_out_edge_for_ --label_that_does_not_exist
 	local
 		vert1,vert2: VERTEX
 		e: EDGE
@@ -253,8 +259,8 @@ feature
 			vert1.field_string ("Testdata", "valuedata")
 			create vert2.make (db)
 			vert2.field_string ("Testdata", "valuedata")
-			create e.make (db, vert1, vert2)
-			e.field_string ("label", "test")
+			create e.make (db, vert1, vert2, "test_label")
+--			e.field_string ("label", "test")
 			e.save
 			db.commit
 
@@ -286,12 +292,11 @@ feature
 			vert1.field_string ("Testdata", "valuedata")
 			create vert2.make (db)
 			vert2.field_string ("Testdata", "valuedata")
-			create e.make (db, vert1, vert2)
-			e.field_string ("label1", "test")
+			create e.make (db, vert1, vert2, "test_label")
 			e.save
 			db.commit
 
-			if not attached db.get_in_edge (vert2, "test") as e_result then
+			if not attached {EDGE}db.get_in_edge (vert2, "test_label") as e_result then
 				assert ("Was not able to get edge", false)
 			end
 
@@ -316,7 +321,7 @@ feature
 			vert1.field_string ("Testdata", "valuedata")
 			create vert2.make (db)
 			vert2.field_string ("Testdata", "valuedata")
-			create e.make (db, vert1, vert2)
+			create e.make (db, vert1, vert2, "test_label")
 			e.field_string ("label", "test")
 			e.save
 			db.commit
@@ -351,9 +356,9 @@ feature
 			vert2.field_string ("Testdata", "valuedata")
 			create vert3.make (db)
 			vert3.field_string ("Testdata", "valuedata")
-			create e1.make (db, vert1, vert2)
+			create e1.make (db, vert1, vert2, "test_label")
 			e1.field_string ("label1", "test")
-			create e2.make (db, vert1, vert3)
+			create e2.make (db, vert1, vert3, "test_label")
 			e2.field_string ("label1", "test")
 			db.commit
 
@@ -382,9 +387,9 @@ feature
 			vert2.field_string ("Testdata", "valuedata")
 			create vert3.make (db)
 			vert3.field_string ("Testdata", "valuedata")
-			create e1.make (db, vert1, vert2)
+			create e1.make (db, vert1, vert2, "test_label")
 			e1.field_string ("label1", "test")
-			create e2.make (db, vert1, vert3)
+			create e2.make (db, vert1, vert3, "test_label")
 			e2.field_string ("label1", "test")
 			db.commit
 			array_of_edges :=  db.get_relations (vert1, "test")

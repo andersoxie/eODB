@@ -69,6 +69,8 @@ feature -- Creation
 				is_database_open := true
 			end
 		end
+	ensure
+		database_is_open : is_database_open
 	end
 
 
@@ -129,6 +131,8 @@ feature -- Creation
 	--		-- Empreical value tested. Need to let the database to close down before we quit the application since otherwise the database files are corrupted.
 	--		exec.sleep (5000000000)
 		end
+	ensure
+		database_is_closed : not is_database_open
 	end
 
 

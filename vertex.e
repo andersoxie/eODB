@@ -68,7 +68,8 @@ save()
 				jni.exception_clear
 			end
 		end
-
+	ensure
+		value_set : get_field_string(index).is_equal (value)
 	end
 
 	field_integer (index :STRING; value : INTEGER)
@@ -94,7 +95,8 @@ save()
 				jni.exception_clear
 			end
 		end
-
+	ensure
+		value_set : get_field_integer (index).is_equal (value)
 	end
 
 

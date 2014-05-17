@@ -17,7 +17,7 @@ create    {GRAPHDATABASE} make_from_java_object
 
 feature
 
-	make(DB : GRAPHDATABASE; v1 : VERTEX; v2 : VERTEX)
+	make(DB : GRAPHDATABASE; v1 : VERTEX; v2 : VERTEX; label : STRING)
 	local
 		java_edge_class: detachable JAVA_CLASS
 		j_args: JAVA_ARGS
@@ -27,12 +27,13 @@ feature
 		java_edge_class := jni.find_class ("edge")
 		if java_edge_class /= Void then
 
-			create j_args.make(3)
+			create j_args.make(4)
 			j_args.put_object (database.java_graphdatabase_object,1)
 			j_args.put_object (v1.java_vertex_object,2)
 			j_args.put_object (v2.java_vertex_object,3)
+			j_args.put_string (label , 4)
 
-			create java_edge_object.create_instance (java_edge_class, "(Lgraphdatabase;Lvertex;Lvertex;)V", j_args)
+			create java_edge_object.create_instance (java_edge_class, "(Lgraphdatabase;Lvertex;Lvertex;Ljava/lang/String;)V", j_args)
 
 			save()
 			v1.save

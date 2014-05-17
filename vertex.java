@@ -16,7 +16,6 @@ try{
 	graphdatabase gdb = (graphdatabase ) db;
 
 	vert = gdb.database.addVertex(null );
-vert.setProperty("name", "Anders");
 	testprint("End of vertex constructor!");
 
 } catch (Exception e){
@@ -34,25 +33,32 @@ vertex (OrientVertex graphvertex) {
 OrientVertex vert;
 
 void field_integer (String index, int value){
+try{
+	testprint("Start field_integer in vertex! index: " + index + " Value: " + value);
+	vert.removeProperty(index);
 	vert.setProperty (index, value);
+	testprint("End field_integer in vertex! Value set!");
+   } catch (Exception e){
+	testprint("field!" + "Error: " + e.getMessage());
+   }
 }
 
 void field_string (String index, String value){
+try{
+	testprint("Start field_string in vertex! index: " + index + " Value: " + value);
 	vert.setProperty (index, value);
+	testprint("End field_string in vertex!");
+   } catch (Exception e){
+	testprint("field!" + "Error: " + e.getMessage());
+   }
 }
 
 
 int get_cluster_id() {
-//	testprint("vertex get_cluster_id!" + vert.getIdentity().getClusterId());
-
 	return vert.getIdentity().getClusterId();
-
 }
 long get_cluster_position() {
-//	testprint("vertex get_cluster_position!" + vert.getIdentity().getClusterPosition().longValueHigh());
-
 	return vert.getIdentity().getClusterPosition().longValueHigh();
-
 }
 
 
@@ -60,7 +66,9 @@ long get_cluster_position() {
 int  field_integer(String index){
 Integer i = 0;
 try{
- i = (Integer) vert.getProperty(index);
+	testprint("field_integer! index: " + index);
+	i = (Integer) vert.getProperty(index);
+	testprint("field_integer! value: " + i.intValue());
 } catch (Exception e){
 	testprint("field_integer!" + "Error: " + e.getMessage());
 
@@ -70,9 +78,16 @@ return i.intValue();
 }
 
 String  get_field_string(String index){
+String s;
+s = "";
+try{
 	testprint("get_field_string! index: " + index);
-return  (String) vert.getProperty(index);
-
+	s = (String) vert.getProperty(index);
+	testprint("get_field_string! value: " + s);
+   } catch (Exception e){
+	testprint("field!" + "Error: " + e.getMessage());
+   }
+	return s;
 }
 
 
@@ -88,7 +103,6 @@ void delete (graphdatabase gdb){
 
 	testprint("delete vertex!");
 	gdb.database.removeVertex(vert );
-//	vert.delete();
 }
 
 
